@@ -19,9 +19,9 @@ export const deleteCommentHandler: ExpressHandler<
     return res.sendStatus(400);
   }
 
-  const existing = await db.getCommentById(id);
+  const existing = await db.getComment(id);
   if (!existing) {
-    return res.sendStatus(403);
+    return res.sendStatus(404);
   }
 
   await db.deleteComment(id);

@@ -66,13 +66,35 @@ export class SqlDataStore implements Datastore {
   }
 
   getPost(id: string): Promise<Post | undefined> {
-    throw new Error("Method not implemented.");
+    return this.db.get("SELECT * FROM posts WHERE id = ?", id);
   }
+
   deletePost(id: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  createLike(like: Like): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async createLike(like: Like): Promise<void> {
+    await this.db.run(
+      "INSERT INTO likes (postId, userId) VALUES (?,?)",
+      like.postId,
+      like.userId
+    );
+  }
+
+  getLike(postId: string, userId: string): Promise<Like | undefined> {
+    return this.db.get(
+      "SELECT * FROM likes WHERE postId = ? AND userId = ?",
+      postId,
+      userId
+    );
+  }
+
+  async deleteLike(postId: string, userId: string): Promise<void> {
+    await this.db.run(
+      "DELETE FROM likes WHERE postId = ? AND userId = ?",
+      postId,
+      userId
+    );
   }
 
   async createComment(comment: Comment): Promise<void> {
@@ -90,7 +112,7 @@ export class SqlDataStore implements Datastore {
     return this.db.all<Comment[]>("SELECT * FROM comments");
   }
 
-  async getCommentById(id: string): Promise<Comment | undefined> {
+  async getComment(id: string): Promise<Comment | undefined> {
     return await this.db.get("SELECT * FROM comments WHERE id = ?", id);
   }
 

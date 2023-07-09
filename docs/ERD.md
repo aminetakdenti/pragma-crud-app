@@ -92,7 +92,8 @@ for Google + Facebook and maybe others (Github?).
 **Likes**:
 
 ```restfull
-/likes/new [POST]
+/likes/ [POST]
+/likes/ [DELETE]
 ```
 
 **Comments**:

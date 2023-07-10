@@ -1,4 +1,4 @@
-import express, { ErrorRequestHandler, json } from "express";
+import express, { json, urlencoded } from "express";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import expressAsyncHandler from "express-async-handler";
@@ -25,6 +25,7 @@ import { createLikeHandler, deleteLikeHandler } from "./handlers/likeHandler";
 
   // midelware before handling the request
   app.use(morgan("dev"));
+  app.use(urlencoded({ extended: true }));
   app.use(json());
   app.use(requestLoggerMiddleware);
 

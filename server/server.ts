@@ -21,7 +21,7 @@ import { createLikeHandler, deleteLikeHandler } from "./handlers/likeHandler";
   dotenv.config();
 
   const app = express();
-  const PORT: number = Number(process.env.PORT) || 8000;
+  const PORT: number = Number(process.env.PORT) || 3000;
 
   // midelware before handling the request
   app.use(morgan("dev"));

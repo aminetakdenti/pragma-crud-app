@@ -34,7 +34,7 @@ import {
   app.use(requestLoggerMiddleware);
 
   // public endpoints
-  app.get("/healthz", (req, res) => res.send({ status: "✌️" }));
+  app.get("/healthz", (_, res) => res.send({ status: "✌️" }));
   app.post("/v1/signup", expressAsyncHandler(singUpHandler));
   app.post("/v1/signin", expressAsyncHandler(signInHandler));
 

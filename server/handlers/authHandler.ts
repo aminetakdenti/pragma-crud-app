@@ -4,9 +4,10 @@ import {
   SignInResponse,
   SignUpRequest,
   SignUpResponse,
-} from "../api";
+  User,
+} from "../../shared";
 import { db } from "../dataStore";
-import { ExpressHandler, User } from "../types";
+import { ExpressHandler } from "../types";
 import { signJwt } from "../auth";
 
 export const signInHandler: ExpressHandler<

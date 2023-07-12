@@ -1,6 +1,6 @@
-import { LikesPostResponse } from "../api";
+import { LikesPostResponse, Like } from "../../shared";
 import { db } from "../dataStore";
-import { ExpressHandlerWithParams, Like } from "../types";
+import { ExpressHandlerWithParams } from "../types";
 
 export const createLikeHandler: ExpressHandlerWithParams<
   { postId: string },

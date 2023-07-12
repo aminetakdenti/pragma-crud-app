@@ -1,17 +1,18 @@
 import { randomUUID } from "crypto";
 import { db } from "../dataStore";
-import { ExpressHandler, Post } from "../types";
+import { ExpressHandler } from "../types";
 import {
   CreatePostRequest,
   CreatePostResponse,
   ListPostRequest,
   ListPostResponse,
-} from "../api";
+  Post,
+} from "../../shared";
 
 export const listPostHandler: ExpressHandler<
   ListPostRequest,
   ListPostResponse
-> = async (req, res) => {
+> = async (_, res) => {
   res.send({ posts: await db.listPost() });
 };
 

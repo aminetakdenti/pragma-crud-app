@@ -2,7 +2,7 @@ import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 
 import { Datastore } from "..";
-import { User, Post, Like, Comment } from "../../types";
+import { User, Post, Like, Comment } from "../../../shared";
 import path from "path";
 
 export class SqlDataStore implements Datastore {
@@ -69,8 +69,8 @@ export class SqlDataStore implements Datastore {
     return this.db.get("SELECT * FROM posts WHERE id = ?", id);
   }
 
-  deletePost(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deletePost(PostId: string): Promise<void> {
+    await this.db.run("DELETE FROM posts WHERE postId = ?", PostId);
   }
 
   async createLike(like: Like): Promise<void> {
@@ -124,8 +124,12 @@ export class SqlDataStore implements Datastore {
     );
   }
 
-  countComments(postId: string): Promise<number> {
-    throw new Error("Method not implemented.");
+  async countComments(postId: string): Promise<number> {
+    const result = await this.db.get<{ count: number }>(
+      "SELECT COUNT (*) AS count FROM comments WHERE postId = ?",
+      postId
+    );
+    return result?.count ?? 0;
   }
 
   async getComment(id: string): Promise<Comment | undefined> {

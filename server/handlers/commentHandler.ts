@@ -4,9 +4,10 @@ import {
   CreateCommentResponse,
   DeleteCommentResponse,
   ListCommentsResponse,
-} from "../api";
+  Comment,
+} from "../../shared";
 import { db } from "../dataStore";
-import { Comment, ExpressHandler, ExpressHandlerWithParams } from "../types";
+import { ExpressHandler, ExpressHandlerWithParams } from "../types";
 
 export const deleteCommentHandler: ExpressHandlerWithParams<
   { id: string },

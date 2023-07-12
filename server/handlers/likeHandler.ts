@@ -1,50 +1,69 @@
-import {
-  CreateLikeRequest,
-  CreateLikeResponse,
-  DeleteLikeRequest,
-  DeleteLikeResponse,
-} from "../api";
+import { LikesPostResponse } from "../api";
 import { db } from "../dataStore";
-import { ExpressHandler, Like } from "../types";
+import { ExpressHandlerWithParams, Like } from "../types";
 
-export const createLikeHandler: ExpressHandler<
-  CreateLikeRequest,
-  CreateLikeResponse
+export const createLikeHandler: ExpressHandlerWithParams<
+  { postId: string },
+  null,
+  {}
 > = async (req, res) => {
-  const { postId } = req.body;
-  if (!postId) {
-    return res.sendStatus(400);
+  if (!req.params.postId) {
+    return res.status(400).send({ error: "Post ID is missing" });
   }
 
-  const existing = await db.getPost(postId);
-  if (!existing) {
-    return res.sendStatus(404);
+  if (!(await db.getPost(req.params.postId))) {
+    return res.status(404).send({ error: "Post not found " });
+  }
+
+  const likeExist = await db.exists({
+    postId: req.params.postId,
+    userId: res.locals.userId,
+  });
+
+  if (likeExist) {
+    return res.status(400).send({ error: "Duplicate like" });
   }
 
   const like: Like = {
+    postId: req.params.postId,
     userId: res.locals.userId,
-    postId,
   };
-  db.createLike(like);
-  res.sendStatus(200);
+
+  await db.createLike(like);
+  return res.sendStatus(200);
 };
 
-export const deleteLikeHandler: ExpressHandler<
-  DeleteLikeRequest,
-  DeleteLikeResponse
+export const deleteLikeHandler: ExpressHandlerWithParams<
+  { postId: string },
+  null,
+  {}
 > = async (req, res) => {
-  const { postId } = req.body;
-  const userId = res.locals.userId;
-  if (!postId) {
-    return res.sendStatus(400);
+  if (!req.params.postId) {
+    return res.status(400).send({ error: "Post ID is missing" });
   }
 
-  const existing =
-    (await db.getPost(postId)) && (await db.getLike(postId, userId));
-  if (!existing) {
-    return res.sendStatus(404);
+  if (!(await db.getPost(req.params.postId))) {
+    return res.status(404).send({ error: "Post not found " });
   }
 
-  db.deleteLike(postId, userId);
-  res.sendStatus(200);
+  const like: Like = {
+    postId: req.params.postId,
+    userId: res.locals.userId,
+  };
+
+  await db.deleteLike(like);
+  return res.sendStatus(200);
+};
+
+export const likesPostHandler: ExpressHandlerWithParams<
+  { postId: string },
+  null,
+  LikesPostResponse
+> = async (req, res) => {
+  if (!req.params.postId) {
+    return res.status(400).send({ error: "Post ID is missing" });
+  }
+
+  const likes: number = await db.getLikes(req.params.postId);
+  return res.send({ likes });
 };

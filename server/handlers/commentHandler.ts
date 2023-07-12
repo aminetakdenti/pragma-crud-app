@@ -2,29 +2,22 @@ import { randomUUID } from "crypto";
 import {
   CreateCommentRequest,
   CreateCommentResponse,
-  DeleteCommentRequest,
   DeleteCommentResponse,
-  ListCommentRequest,
-  ListCommentResponse,
+  ListCommentsResponse,
 } from "../api";
 import { db } from "../dataStore";
-import { Comment, ExpressHandler } from "../types";
+import { Comment, ExpressHandler, ExpressHandlerWithParams } from "../types";
 
-export const deleteCommentHandler: ExpressHandler<
-  DeleteCommentRequest,
+export const deleteCommentHandler: ExpressHandlerWithParams<
+  { id: string },
+  null,
   DeleteCommentResponse
 > = async (req, res) => {
-  const { id } = req.body;
-  if (!id) {
-    return res.sendStatus(400);
+  if (!req.params.id) {
+    return res.status(400).send({ error: "Comment ID is missing" });
   }
 
-  const existing = await db.getComment(id);
-  if (!existing) {
-    return res.sendStatus(404);
-  }
-
-  await db.deleteComment(id);
+  await db.deleteComment(req.params.id);
   return res.sendStatus(200);
 };
 
@@ -49,9 +42,14 @@ export const createCommentHandler: ExpressHandler<
   res.sendStatus(200);
 };
 
-export const listCommentHanlder: ExpressHandler<
-  ListCommentRequest,
-  ListCommentResponse
+export const listCommentHanlder: ExpressHandlerWithParams<
+  { postId: string },
+  string,
+  ListCommentsResponse
 > = async (req, res) => {
-  return res.send({ comments: await db.listComment() });
+  if (!req.params.postId) {
+    return res.status(400).send({ error: "Post ID is missing" });
+  }
+
+  return res.send({ comments: await db.listComments(req.params.postId) });
 };

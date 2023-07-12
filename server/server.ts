@@ -13,7 +13,11 @@ import {
   deleteCommentHandler,
   listCommentHanlder,
 } from "./handlers/commentHandler";
-import { createLikeHandler, deleteLikeHandler } from "./handlers/likeHandler";
+import {
+  createLikeHandler,
+  deleteLikeHandler,
+  likesPostHandler,
+} from "./handlers/likeHandler";
 
 (async () => {
   await initDb();
@@ -42,13 +46,14 @@ import { createLikeHandler, deleteLikeHandler } from "./handlers/likeHandler";
   app.post("/v1/posts", expressAsyncHandler(createPostHandler));
 
   //comment
-  app.get("/v1/comments", expressAsyncHandler(listCommentHanlder));
+  app.get("/v1/comments/:postId", expressAsyncHandler(listCommentHanlder));
   app.post("/v1/comments", expressAsyncHandler(createCommentHandler));
-  app.delete("/v1/comments", expressAsyncHandler(deleteCommentHandler));
+  app.delete("/v1/comments/:id", expressAsyncHandler(deleteCommentHandler));
 
   // like
-  app.post("/v1/likes", expressAsyncHandler(createLikeHandler));
-  app.delete("/v1/likes", expressAsyncHandler(deleteLikeHandler));
+  app.get("/v1/likes/:postId", expressAsyncHandler(likesPostHandler));
+  app.post("/v1/likes/:postId", expressAsyncHandler(createLikeHandler));
+  app.delete("/v1/likes/:postId", expressAsyncHandler(deleteLikeHandler));
 
   // midelware after handling the request
   app.use(errHandler);

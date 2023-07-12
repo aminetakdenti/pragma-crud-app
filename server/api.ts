@@ -18,24 +18,16 @@ export interface GetPostResponse {
 export type CreateCommentRequest = Pick<Comment, "comment" | "postId">;
 export interface CreateCommentResponse {}
 
-export interface ListCommentRequest {}
-export interface ListCommentResponse {
+export interface ListCommentsResponse {
   comments: Comment[];
 }
 
-export interface DeleteCommentRequest {
-  id: string;
-}
-export interface DeleteCommentResponse {}
+export type DeleteCommentResponse = {};
 
 // Like APIs
-export type CreateLikeRequest = Pick<Like, "postId">;
-export interface CreateLikeResponse {}
-
-export interface DeleteLikeRequest {
-  postId: string;
+export interface LikesPostResponse {
+  likes: number;
 }
-export interface DeleteLikeResponse {}
 
 // User APIs
 export type SignUpRequest = Pick<

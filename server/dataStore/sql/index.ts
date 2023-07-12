@@ -81,20 +81,29 @@ export class SqlDataStore implements Datastore {
     );
   }
 
-  getLike(postId: string, userId: string): Promise<Like | undefined> {
-    return this.db.get(
-      "SELECT * FROM likes WHERE postId = ? AND userId = ?",
-      postId,
-      userId
+  async deleteLike(like: Like): Promise<void> {
+    await this.db.run(
+      "DELETE FROM likes WHERE postId = ? AND userId = ?",
+      like.postId,
+      like.userId
     );
   }
 
-  async deleteLike(postId: string, userId: string): Promise<void> {
-    await this.db.run(
-      "DELETE FROM likes WHERE postId = ? AND userId = ?",
-      postId,
-      userId
+  async getLikes(postId: string): Promise<number> {
+    const result = await this.db.get<{ count: number }>(
+      "SELECT COUNT(*) as count FROM likes WHERE postId = ?",
+      postId
     );
+    return result?.count ?? 0;
+  }
+
+  async exists(like: Like): Promise<boolean> {
+    const exist = await this.db.get<Like>(
+      "SELECT * FROM likes WHERE postId = ? AND userId = ?",
+      like.postId,
+      like.userId
+    );
+    return exist ? true : false;
   }
 
   async createComment(comment: Comment): Promise<void> {
@@ -108,8 +117,15 @@ export class SqlDataStore implements Datastore {
     );
   }
 
-  async listComment(): Promise<Comment[]> {
-    return this.db.all<Comment[]>("SELECT * FROM comments");
+  listComments(postId: string): Promise<Comment[]> {
+    return this.db.all<Comment[]>(
+      "SELECT * FROM comments WHERE postId = ?",
+      postId
+    );
+  }
+
+  countComments(postId: string): Promise<number> {
+    throw new Error("Method not implemented.");
   }
 
   async getComment(id: string): Promise<Comment | undefined> {

@@ -46,3 +46,11 @@ export type SignInResponse = {
   user: Pick<User, "email" | "firstName" | "lastName" | "id" | "username">;
   jwt: string;
 };
+
+export type GetUserRequest =
+  | { id: string }
+  | { email: string }
+  | { username: string };
+export interface GetuserResponse {
+  user: Pick<User, "email" | "firstName" | "lastName" | "id" | "username">;
+}

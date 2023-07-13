@@ -1,4 +1,4 @@
-import { Post, Comment, User } from "./types";
+import { Post, Comment, User } from './types';
 
 // Post APIs
 export interface ListPostRequest {}
@@ -6,7 +6,7 @@ export interface ListPostResponse {
   posts: Post[];
 }
 
-export type CreatePostRequest = Pick<Post, "title" | "url">;
+export type CreatePostRequest = Pick<Post, 'title' | 'url'>;
 export interface CreatePostResponse {}
 
 export interface GetPostRequest {}
@@ -15,7 +15,7 @@ export interface GetPostResponse {
 }
 
 // Comment APIs
-export type CreateCommentRequest = Pick<Comment, "comment" | "postId">;
+export type CreateCommentRequest = Pick<Comment, 'comment' | 'postId'>;
 export interface CreateCommentResponse {}
 
 export interface ListCommentsResponse {
@@ -32,7 +32,7 @@ export interface LikesPostResponse {
 // User APIs
 export type SignUpRequest = Pick<
   User,
-  "email" | "firstName" | "lastName" | "password" | "username"
+  'email' | 'firstName' | 'lastName' | 'password' | 'userName'
 >;
 export interface SignUpResponse {
   jwt: string;
@@ -43,14 +43,22 @@ export interface SignInRequest {
   password: string;
 }
 export type SignInResponse = {
-  user: Pick<User, "email" | "firstName" | "lastName" | "id" | "username">;
+  user: Pick<User, 'email' | 'firstName' | 'lastName' | 'id' | 'userName'>;
   jwt: string;
 };
 
-export type GetUserRequest =
-  | { id: string }
-  | { email: string }
-  | { username: string };
 export interface GetuserResponse {
-  user: Pick<User, "email" | "firstName" | "lastName" | "id" | "username">;
+  user: Pick<User, 'email' | 'firstName' | 'lastName' | 'id' | 'userName'>;
 }
+
+export interface GetCurrentUserRequest {}
+export interface GetCurrentUserResponse {
+  user: Pick<User, 'id' | 'firstName' | 'lastName' | 'userName' | 'email'>;
+}
+
+export interface UpdateCurrentUserRequest {
+  firstName: string;
+  lastName: string;
+  username: string;
+}
+export interface UpdateCurrentUserResponse {}
